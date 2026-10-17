@@ -187,7 +187,8 @@ typedef enum GALAXY_SIZE {
     GALAXY_SIZE_HUGE = 3,
     GALAXY_SIZE_MAXIMUM = 4,
     GALAXY_SIZE_CLUSTER = 5,
-    GALAXY_SIZE_COUNT = 6
+    GALAXY_SIZE_MASSIVE = 6,
+    GALAXY_SIZE_COUNT = 7
 } GALAXY_SIZE;
 
 typedef enum STARTING_CIVILIZATION_LEVEL {
@@ -205,7 +206,29 @@ static uint8_t Galaxy_Size_For_Classic_Rules_(uint8_t galaxy_size) {
     if (galaxy_size == GALAXY_SIZE_CLUSTER) {
         return GALAXY_SIZE_HUGE;
     }
+    if (galaxy_size == GALAXY_SIZE_MASSIVE) {
+        return GALAXY_SIZE_MAXIMUM;
+    }
     return galaxy_size;
+}
+
+static int16_t Galaxy_Expansion_Colony_Threshold_(uint8_t galaxy_size) {
+    return galaxy_size == GALAXY_SIZE_MASSIVE
+        ? 18
+        : Galaxy_Size_For_Classic_Rules_(galaxy_size) * 3 + 3;
+}
+
+static int16_t Galaxy_Wormhole_Generation_Limit_(uint8_t galaxy_size, uint32_t seed) {
+    if (galaxy_size != GALAXY_SIZE_MASSIVE) {
+        return Galaxy_Size_For_Classic_Rules_(galaxy_size) * 4 + 4;
+    }
+    // A seed-derived cap survives saves and does not advance gameplay randomness.
+    seed ^= seed >> 16;
+    seed *= 0x7feb352dU;
+    seed ^= seed >> 15;
+    seed *= 0x846ca68bU;
+    seed ^= seed >> 16;
+    return (int16_t)(16 + seed % 13);
 }
 
 static uint8_t Starting_Civilization_Level_For_Classic_Rules_(uint8_t civilization_level) {
@@ -1441,7 +1464,8 @@ static_assert(GAME_DIFFICULTY_COUNT == 5, "game difficulty values must remain sa
 static_assert(EVENT_RANDOM_COUNT == 29, "random event table extent must remain compatible");
 static_assert(EVENT_COUNT == 36, "event table extent must remain compatible");
 static_assert(GALAXY_AGE_COUNT == 3, "galaxy age values must remain save-compatible");
-static_assert(GALAXY_SIZE_COUNT == 6, "galaxy size values must remain save-compatible");
+static_assert(GALAXY_SIZE_MAXIMUM == 4 && GALAXY_SIZE_CLUSTER == 5 && GALAXY_SIZE_MASSIVE == 6,
+    "existing galaxy size values must remain save-compatible");
 static_assert(GOVERNMENT_COUNT == 8, "government values must remain save-compatible");
 static_assert(STOCK_RACE_COUNT == 13, "stock race table extent must remain compatible");
 static_assert(LEADER_TYPE_COUNT == 2, "leader type values must remain compatible");

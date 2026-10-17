@@ -5,6 +5,14 @@
 #include <cstring>
 
 TEST_CASE("generated configuration enums provide canonical bidirectional lookup") {
+    const config::s_generated_enum* galaxy_sizes = config::Find_Generated_Enum("galaxy_size");
+    REQUIRE(galaxy_sizes != nullptr);
+    const config::s_generated_enum_symbol* massive =
+        config::Find_Generated_Enum_Symbol(galaxy_sizes, "massive");
+    REQUIRE(massive != nullptr);
+    CHECK(massive->value == 6);
+    CHECK(config::Find_Generated_Enum_Value(galaxy_sizes, 5) == nullptr);
+
     const config::s_generated_enum* applications =
         config::Find_Generated_Enum("technology_application");
     REQUIRE(applications != nullptr);

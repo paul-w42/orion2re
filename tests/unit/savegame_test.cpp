@@ -772,6 +772,12 @@ DOCTEST_TEST_CASE("latest and version 0 save streams restore the complete persis
     expected.players[0].tech_applications[TECH_APP_STASIS_FIELD] =
         TECH_RESEARCH_STATUS_UNAVAILABLE;
 
+    const s_settings legacy_settings = MOX::settings;
+    DOCTEST_SUBCASE("existing settings") {}
+    DOCTEST_SUBCASE("Massive settings") {
+        MOX::settings.galaxy_size = GALAXY_SIZE_MASSIVE;
+        MOX::settings.start_of_game_seed = 0x13572468;
+    }
     s_settings expected_settings = MOX::settings;
     s_antaran expected_antarans = MOX::antarans;
     s_movable_box expected_boxes[5] = {};
@@ -1086,7 +1092,14 @@ DOCTEST_TEST_CASE("latest and version 0 save streams restore the complete persis
         DOCTEST_CHECK((metadata.stardate == 35123));
         DOCTEST_CHECK((metadata.game_type == 2));
         DOCTEST_CHECK(loaded_seed == random_seed);
-        DOCTEST_CHECK(memcmp(&loaded_settings, &expected_settings, sizeof(expected_settings)) == 0);
+        const s_settings& format_settings = format == 0 ? expected_settings : legacy_settings;
+        DOCTEST_CHECK(memcmp(&loaded_settings, &format_settings, sizeof(format_settings)) == 0);
+        if (format == 0 && expected_settings.galaxy_size == GALAXY_SIZE_MASSIVE) {
+            DOCTEST_CHECK(Galaxy_Wormhole_Generation_Limit_(
+                loaded_settings.galaxy_size, loaded_settings.start_of_game_seed) ==
+                Galaxy_Wormhole_Generation_Limit_(
+                    GALAXY_SIZE_MASSIVE, expected_settings.start_of_game_seed));
+        }
         if (format == 0) {
             Check_Versioned_State_(expected, actual);
             DOCTEST_CHECK((actual.colonies[0].industry_per_worker == 0));

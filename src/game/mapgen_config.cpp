@@ -54,6 +54,7 @@ namespace MAPGEN {
                 {9, 8},
                 {0, 0},
                 {9, 8},
+                {12, 10},
             };
             if (size != GALAXY_SIZE_MAXIMUM) {
                 *grid_x = fixed_grid[size][0];
@@ -118,7 +119,8 @@ namespace MAPGEN {
                     star_count[GALAXY_SIZE_LARGE] < star_count[GALAXY_SIZE_HUGE] &&
                     star_count[GALAXY_SIZE_HUGE] < ORIGINAL_MAX_STARS &&
                     star_count[GALAXY_SIZE_MAXIMUM] > star_count[GALAXY_SIZE_HUGE] &&
-                    star_count[GALAXY_SIZE_CLUSTER] <= ORIGINAL_MAX_STARS)) {
+                    star_count[GALAXY_SIZE_CLUSTER] <= ORIGINAL_MAX_STARS &&
+                    star_count[GALAXY_SIZE_MASSIVE] > star_count[GALAXY_SIZE_HUGE])) {
                 return false;
             }
 

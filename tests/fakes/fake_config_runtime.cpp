@@ -160,7 +160,7 @@ namespace REPORT {
 }
 
 namespace MAPGEN {
-    int16_t star_count_by_galaxy_size[GALAXY_SIZE_COUNT] = {20, 36, 54, 71, 99, 71};
+    int16_t star_count_by_galaxy_size[GALAXY_SIZE_COUNT] = {20, 36, 54, 71, 99, 71, 120};
     int16_t& maximum_star_count = star_count_by_galaxy_size[GALAXY_SIZE_MAXIMUM];
     s_map_layout layout[GALAXY_SIZE_COUNT] = {
         {0, 506, 400, 10, 10, 0, 0},
@@ -169,6 +169,7 @@ namespace MAPGEN {
         {0, 1518, 1200, 30, 30, 3, 3},
         {1, 1800, 1350, 30, 36, 3, 3},
         {0, 1011, 800, 15, 20, 3, 3},
+        {0, 1974, 1560, 30, 39, 3, 3},
     };
     s_planet_generation_config planet_generation_config = {};
     s_home_system_config home_system_config = {3};
@@ -184,6 +185,7 @@ namespace MAPGEN {
         {2, 4, 0},
         {2, 4, 1},
         {2, 4, 0},
+        {2, 4, 1},
     };
     uint8_t satellite_orbit_weight[5][GALAXY_AGE_COUNT] = {
         {25, 20, 10},

@@ -12,11 +12,12 @@ The defaults are Medium size, Average age, and five players.
 | Medium | 36 | More room to develop before borders meet. |
 | Large | 54 | Longer exploration and a broader mid-game. |
 | Huge | 71 | The largest classic-style layout. |
-| Maximum | 99 | The widest map and the greatest management and display workload. |
+| Maximum | 99 | An extended map with automatic sizing based on its configured star count. |
+| Massive | 120 | About 30% wider and taller than Huge, preserving its average star density. |
 
 The values above are the native defaults. Maximum uses 99 stars by default, but the engine supports up to 1,024 total stars. The `map star_count` setting accepts up to 1,023 regular stars because Orion can occupy the remaining slot.
 
-Version 2.00 offers these five size choices. Cluster is a legacy galaxy type retained for compatibility with existing saved games, but it is not available when starting a new game.
+The selector offers these six size choices. Cluster is a legacy galaxy type retained for compatibility with existing saved games, but it is not available when starting a new game.
 
 Larger maps provide more systems to explore and can increase travel time, the number of colonies and fleets to manage, game length, turn processing, and display work. Actual travel also depends on star placement, fuel range, wormholes, and the empires in the game. Use a smaller choice if a long game or a large empire would be uncomfortable to manage.
 
@@ -26,12 +27,14 @@ Young, Average, and Old change the weights used when stars and planets are gener
 
 ## Navigating large maps
 
-Press `+` to zoom in and `-` to zoom out. In Maximum galaxies, each zoom-in step halves the visible width and height by default, so the next level shows one quarter of the previous map area. Set `interface maximum_galaxy_zoom_mode = classic;` to use the wider 72-star-style zoom scales instead. At the farthest zoom level of Maximum, the map draws automatic range outlines for empires known through exploration or diplomatic contact. These outlines do not reveal unknown empires.
+Massive displays known-system names at every zoom level, including the full-galaxy view. Unexplored systems retain the normal visibility rules.
 
-Press Alt+V to cycle known influence from off, to checkerboard fills with borders, to borders only. The optional `interface main_map_overview_markers = true;` setting replaces star artwork with compact markers in Maximum's all-stars view; it is disabled by default. Influence and overview markers are separate aids. See [Interface and display](interface.md#main-map-navigation) for marker colors and other map controls.
+Press `+` to zoom in and `-` to zoom out. In Maximum and Massive galaxies, each zoom-in step halves the visible width and height by default, so the next level shows one quarter of the previous map area. Set `interface maximum_galaxy_zoom_mode = classic;` to use the wider 72-star-style zoom scales instead. At the farthest zoom level, these galaxies draw automatic range outlines for empires known through exploration or diplomatic contact. These outlines do not reveal unknown empires.
+
+Press Alt+V to cycle known influence from off, to checkerboard fills with borders, to borders only. The optional `interface main_map_overview_markers = true;` setting replaces star artwork with compact markers in the all-stars view of Maximum and Massive; it is disabled by default. Influence and overview markers are separate aids. See [Interface and display](interface.md#main-map-navigation) for marker colors and other map controls.
 
 ## Scoring and saved games
 
-Galaxy size affects the time and captured-colonist parts of the final score. Maximum has its own extended values; see [Victory and scoring](../game-mechanics/victory-and-scoring.md#score-calculation). The selected size, age, generated map, and related setup are stored with the game and restored when that save is loaded.
+Galaxy size affects the time and captured-colonist parts of the final score. Maximum and Massive share extended scoring values; Massive uses a fixed captured-population divisor of 5. See [Victory and scoring](../game-mechanics/victory-and-scoring.md#score-calculation). The selected size, age, generated map, and related setup are stored with the game and restored when that save is loaded. Massive saves and multiplayer sessions require an executable that supports the new preset.
 
 In a joined game, players use the galaxy setup selected by the host.

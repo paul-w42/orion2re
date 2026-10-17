@@ -358,6 +358,9 @@ namespace MOX {
     int8_t game_type;
     int16_t MAP_MAX_X;
     int16_t MAP_MAX_Y;
+    int16_t cur_map_scale;
+    int16_t max_map_scale;
+    int16_t max_zoom_count;
     s_animation_header* screen_seg = nullptr;
     uint8_t g_galaxy_age;
     int16_t zoom_count;

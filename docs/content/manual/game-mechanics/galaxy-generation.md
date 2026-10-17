@@ -1,5 +1,11 @@
 # Manual: Galaxy generation
 
+## Galaxy sizes
+
+The new-game selector offers Small (20 stars), Medium (36), Large (54), Huge (71), Maximum (99), and Massive (120). These are the default counts; mods can change them.
+
+Massive expands Huge's width and height by approximately 30%, retaining its average star density and local travel distances. It uses Maximum's size-dependent gameplay rules, except that expansion-related diplomacy penalties become eligible above 18 colonies. Its wormhole-generation counter limit is chosen between 16 and 28 inclusive from the galaxy's starting seed. This is a cap, not a guaranteed number of links; placement and special-generation rolls can produce fewer. The same seed always gives the same cap.
+
 ## Home systems
 
 Every home system is generated with at least three planets. The homeworld and other protected home-system objects are retained if the map must reduce its total number of satellites.

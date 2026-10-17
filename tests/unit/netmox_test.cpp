@@ -524,6 +524,11 @@ DOCTEST_TEST_CASE("pick-position packet preserves expanded freight storage") {
 DOCTEST_TEST_CASE("broadcast snapshot encode and decode round trip serialized game state") {
     Scoped_Netmox_Roundtrip_State_ scope;
     Fill_Netmox_Roundtrip_State_();
+    DOCTEST_SUBCASE("existing galaxy") {}
+    DOCTEST_SUBCASE("Massive galaxy") {
+        MOX::settings.galaxy_size = GALAXY_SIZE_MASSIVE;
+        MOX::NUM_STARS = 120;
+    }
 
     const s_network expected_net = NETMOX::net;
     const uint32_t expected_stardate = MOX::stardate;

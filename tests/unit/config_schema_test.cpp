@@ -243,6 +243,7 @@ DOCTEST_TEST_SUITE("configuration schema") {
             {"game_difficulty", "values", "impossible", GAME_DIFFICULTY_IMPOSSIBLE},
             {"galaxy_age", "values", "old", GALAXY_AGE_OLD},
             {"galaxy_size", "values", "maximum", GALAXY_SIZE_MAXIMUM},
+            {"galaxy_size", "values", "massive", GALAXY_SIZE_MASSIVE},
             {"government", "values", "feudal", GOVERNMENT_FEUDAL},
             {"government", "values", "galactic_unification", GOVERNMENT_GALACTIC_UNIFICATION},
             {"stock_race_index", "values", "alkari", STOCK_RACE_ALKARI},

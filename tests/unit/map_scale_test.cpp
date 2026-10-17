@@ -23,6 +23,7 @@ DOCTEST_TEST_CASE("galaxy size classification uses configured classic star count
         MAPGEN::star_count_by_galaxy_size[3],
         MAPGEN::star_count_by_galaxy_size[4],
         MAPGEN::star_count_by_galaxy_size[5],
+        MAPGEN::star_count_by_galaxy_size[6],
     };
     const int16_t previous_num_stars = MOX::NUM_STARS;
     const int8_t previous_galaxy_size = MOX::settings.galaxy_size;
@@ -54,6 +55,9 @@ DOCTEST_TEST_CASE("galaxy size classification uses configured classic star count
     DOCTEST_CHECK(HAROLD::Galaxy_Size_From_N_Stars() == GALAXY_SIZE_MAXIMUM);
     MOX::settings.galaxy_size = GALAXY_SIZE_CLUSTER;
     DOCTEST_CHECK(HAROLD::Galaxy_Size_From_N_Stars() == GALAXY_SIZE_CLUSTER);
+    MOX::NUM_STARS = 120;
+    MOX::settings.galaxy_size = GALAXY_SIZE_MASSIVE;
+    DOCTEST_CHECK(HAROLD::Galaxy_Size_From_N_Stars() == GALAXY_SIZE_MASSIVE);
 
     for (int size = 0; size < GALAXY_SIZE_COUNT; ++size) {
         MAPGEN::star_count_by_galaxy_size[size] = previous_star_count[size];

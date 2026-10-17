@@ -6941,6 +6941,34 @@ DOCTEST_TEST_CASE("maximum galaxy star count binds through the canonical map tab
         "map star_count maximum = 1024;", &writes, &diagnostic));
 }
 
+DOCTEST_TEST_CASE("Massive configuration exposes its star count and validates its layout") {
+    config::s_config_state state;
+    DOCTEST_REQUIRE(config::Initialize_Defaults(&state));
+    DOCTEST_REQUIRE(config::Commit_State(&state));
+    DOCTEST_CHECK(MAPGEN::star_count_by_galaxy_size[GALAXY_SIZE_MASSIVE] == 120);
+    config::s_config_write_set writes;
+    config::s_cfg_diagnostic diagnostic;
+    DOCTEST_REQUIRE(Append_Decoded_(
+        "map star_count massive = 120;"
+        "map layout massive width = 1974;"
+        "map layout massive height = 1560;", &writes, &diagnostic));
+    DOCTEST_REQUIRE(config::Apply_Write_Set(&writes, &state, &diagnostic));
+    DOCTEST_REQUIRE(config::Commit_State(&state));
+
+    writes.writes.clear();
+    DOCTEST_REQUIRE(Append_Decoded_(
+        "map star_count massive = 71;", &writes, &diagnostic));
+    DOCTEST_REQUIRE(config::Apply_Write_Set(&writes, &state, &diagnostic));
+    DOCTEST_CHECK_FALSE(config::Commit_State(&state));
+
+    DOCTEST_REQUIRE(config::Initialize_Defaults(&state));
+    writes.writes.clear();
+    DOCTEST_REQUIRE(Append_Decoded_(
+        "map layout massive width = 506;", &writes, &diagnostic));
+    DOCTEST_REQUIRE(config::Apply_Write_Set(&writes, &state, &diagnostic));
+    DOCTEST_CHECK_FALSE(config::Commit_State(&state));
+}
+
 DOCTEST_TEST_CASE("descriptive map settings bind native generation policy") {
     config::s_config_state state;
     DOCTEST_REQUIRE(config::Initialize_Defaults(&state));

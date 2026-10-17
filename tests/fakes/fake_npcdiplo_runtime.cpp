@@ -7,6 +7,7 @@ namespace {
     s_player players[MAX_PLAYERS];
     bool player_may_get_tech;
     int32_t tech_value;
+    int relations_calls;
 }
 
 namespace TEST_NPCDIPLO {
@@ -15,6 +16,7 @@ namespace TEST_NPCDIPLO {
         MOX::NUM_PLAYERS = 2;
         player_may_get_tech = true;
         tech_value = 0;
+        relations_calls = 0;
     }
 
     void Set_Player_May_Get_Tech_(bool may_get) {
@@ -23,6 +25,10 @@ namespace TEST_NPCDIPLO {
 
     void Set_Tech_Value_(int32_t value) {
         tech_value = value;
+    }
+
+    int Relations_Calls_() {
+        return relations_calls;
     }
 }
 
@@ -46,6 +52,12 @@ namespace COLCALC {
 namespace game_random {
     uint32_t __cdecl Random(uint32_t) {
         return 1;
+    }
+}
+
+namespace diplomac {
+    void __cdecl Change_Relations(int16_t, int16_t, int16_t, int16_t, int16_t, int16_t) {
+        ++relations_calls;
     }
 }
 

@@ -38,7 +38,8 @@ namespace NEWGAME {
         enum {
             NEW_GAME_GALAXY_SIZE_HUGE = 3,
             NEW_GAME_GALAXY_SIZE_MAXIMUM = 4,
-            NEW_GAME_GALAXY_SIZE_COUNT = 5,
+            NEW_GAME_GALAXY_SIZE_MASSIVE = 5,
+            NEW_GAME_GALAXY_SIZE_COUNT = 6,
             NEW_GAME_CIVILIZATION_POST_WARP = 2,
             NEW_GAME_CIVILIZATION_ADVANCED = 3,
             NEW_GAME_PLAYER_COUNT_RANDOM = MAX_PLAYERS - 1,
@@ -56,6 +57,8 @@ namespace NEWGAME {
                     return NEW_GAME_GALAXY_SIZE_HUGE;
                 case GALAXY_SIZE_MAXIMUM:
                     return NEW_GAME_GALAXY_SIZE_MAXIMUM;
+                case GALAXY_SIZE_MASSIVE:
+                    return NEW_GAME_GALAXY_SIZE_MASSIVE;
                 default:
                     return galaxy_size;
             }
@@ -67,6 +70,8 @@ namespace NEWGAME {
                     return GALAXY_SIZE_HUGE;
                 case NEW_GAME_GALAXY_SIZE_MAXIMUM:
                     return GALAXY_SIZE_MAXIMUM;
+                case NEW_GAME_GALAXY_SIZE_MASSIVE:
+                    return GALAXY_SIZE_MASSIVE;
                 default:
                     return (uint8_t)button;
             }
@@ -302,7 +307,8 @@ namespace NEWGAME {
                         anim = difficulty_anims[diff_button_variable];
                     } else if ((col == 1) && (row == 0)) {
                         int16_t preview_idx = gal_size_button_variable;
-                        if (preview_idx == NEW_GAME_GALAXY_SIZE_MAXIMUM) {
+                        if (preview_idx == NEW_GAME_GALAXY_SIZE_MAXIMUM ||
+                            preview_idx == NEW_GAME_GALAXY_SIZE_MASSIVE) {
                             preview_idx = NEW_GAME_GALAXY_SIZE_HUGE;
                         }
                         anim = gal_size_anims[preview_idx];
@@ -430,6 +436,7 @@ namespace NEWGAME {
         gal_size_button_strings[NEW_GAME_GALAXY_SIZE_HUGE] = ESTRINGS::E_Strings(0x143);
 #if MAX_STARS > ORIGINAL_MAX_STARS
         gal_size_button_strings[NEW_GAME_GALAXY_SIZE_MAXIMUM] = const_cast<char*>("Maximum");
+        gal_size_button_strings[NEW_GAME_GALAXY_SIZE_MASSIVE] = const_cast<char*>("Massive");
 #endif
 
         gal_age_button_strings[GALAXY_AGE_YOUNG] = ESTRINGS::E_Strings(0x179);

@@ -83,6 +83,7 @@ DOCTEST_TEST_CASE("new-game galaxy selector omits Cluster and converts legacy se
         {GALAXY_SIZE_HUGE, 3},
         {GALAXY_SIZE_MAXIMUM, 4},
         {GALAXY_SIZE_CLUSTER, 3},
+        {GALAXY_SIZE_MASSIVE, 5},
     };
 
     for (const s_case& test_case : settings) {
@@ -91,10 +92,11 @@ DOCTEST_TEST_CASE("new-game galaxy selector omits Cluster and converts legacy se
         DOCTEST_CHECK(NEWGAME::gal_size_button_variable == test_case.button);
     }
 
-    for (int16_t button = 0; button < 5; ++button) {
+    for (int16_t button = 0; button < 6; ++button) {
         NEWGAME::gal_size_button_variable = button;
         NEWGAME::Temps_To_Globals();
-        DOCTEST_CHECK(MOX::settings.galaxy_size == (uint8_t)button);
+        DOCTEST_CHECK(MOX::settings.galaxy_size ==
+            (button == 5 ? GALAXY_SIZE_MASSIVE : (uint8_t)button));
     }
 }
 

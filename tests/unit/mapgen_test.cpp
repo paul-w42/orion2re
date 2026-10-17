@@ -156,6 +156,73 @@ DOCTEST_TEST_CASE("Cluster defaults to Huge generation geometry") {
     DOCTEST_CHECK(cluster.initial_zoom_level == huge.initial_zoom_level);
 }
 
+DOCTEST_TEST_CASE("Massive expands Huge while preserving its density and fitting the overview") {
+    TEST_MAPGEN::Reset_();
+    const MAPGEN::s_map_layout& massive = MAPGEN::layout[GALAXY_SIZE_MASSIVE];
+    const MAPGEN::s_map_layout& huge = MAPGEN::layout[GALAXY_SIZE_HUGE];
+    DOCTEST_CHECK(MAPGEN::star_count_by_galaxy_size[GALAXY_SIZE_MASSIVE] == 120);
+    const double area_ratio = (double)massive.width * massive.height /
+        ((double)huge.width * huge.height);
+    DOCTEST_CHECK(area_ratio == doctest::Approx(120.0 / 71.0).epsilon(0.001));
+    DOCTEST_CHECK(massive.star_spacing == huge.star_spacing);
+    MAPGEN::Init_Main_Screen(GALAXY_SIZE_MASSIVE);
+    DOCTEST_CHECK(MOX::MAP_MAX_X == massive.width);
+    DOCTEST_CHECK(MOX::MAP_MAX_Y == massive.height);
+    DOCTEST_CHECK(MOX::MAP_MAX_X * 10 / MOX::max_map_scale <= 506);
+    DOCTEST_CHECK(MOX::MAP_MAX_Y * 10 / MOX::max_map_scale <= 400);
+}
+
+DOCTEST_TEST_CASE("Massive uses Maximum rules except its explicit diplomacy and wormhole policies") {
+    TEST_MAPGEN::Reset_();
+    DOCTEST_CHECK(GALAXY_SIZE_MAXIMUM == 4);
+    DOCTEST_CHECK(GALAXY_SIZE_CLUSTER == 5);
+    DOCTEST_CHECK(GALAXY_SIZE_MASSIVE == 6);
+    DOCTEST_CHECK(Galaxy_Size_For_Classic_Rules_(GALAXY_SIZE_MASSIVE) == GALAXY_SIZE_MAXIMUM);
+    DOCTEST_CHECK(Galaxy_Size_For_Classic_Rules_(GALAXY_SIZE_MASSIVE) + 1 == 5);
+    DOCTEST_CHECK(Galaxy_Expansion_Colony_Threshold_(GALAXY_SIZE_MASSIVE) == 18);
+    DOCTEST_CHECK(Galaxy_Expansion_Colony_Threshold_(GALAXY_SIZE_HUGE) == 12);
+    DOCTEST_CHECK(Galaxy_Expansion_Colony_Threshold_(GALAXY_SIZE_MAXIMUM) == 15);
+
+    bool seen[13] = {};
+    for (uint32_t seed = 0; seed < 1024; ++seed) {
+        const int16_t cap = Galaxy_Wormhole_Generation_Limit_(GALAXY_SIZE_MASSIVE, seed);
+        DOCTEST_REQUIRE(cap >= 16);
+        DOCTEST_REQUIRE(cap <= 28);
+        DOCTEST_CHECK(Galaxy_Wormhole_Generation_Limit_(GALAXY_SIZE_MASSIVE, seed) == cap);
+        DOCTEST_CHECK(Galaxy_Wormhole_Generation_Limit_(GALAXY_SIZE_HUGE, seed) == 16);
+        DOCTEST_CHECK(Galaxy_Wormhole_Generation_Limit_(GALAXY_SIZE_MAXIMUM, seed) == 20);
+        seen[cap - 16] = true;
+    }
+    for (bool value : seen) DOCTEST_CHECK(value);
+    DOCTEST_CHECK(TEST_MAPGEN::Random_Calls_() == 0);
+}
+
+DOCTEST_TEST_CASE("Massive special generation enforces its seed-dependent wormhole cap") {
+    for (uint32_t seed : {0U, 1U, 0xffffffffU}) {
+        TEST_MAPGEN::Reset_();
+        MOX::settings.galaxy_size = GALAXY_SIZE_MASSIVE;
+        MOX::settings.start_of_game_seed = seed;
+        const int16_t cap = Galaxy_Wormhole_Generation_Limit_(GALAXY_SIZE_MASSIVE, seed);
+        MAPGEN::n_wormholes = (uint8_t)(cap - 1);
+        const int16_t choices[] = {
+            SYSTEM_SPECIAL_STABLE_WORMHOLE, SYSTEM_SPECIAL_SPACE_DEBRIS,
+        };
+        TEST_MAPGEN::Set_Weighted_Choices_(choices, 2);
+        int16_t wormhole = 0;
+        int8_t special = SYSTEM_SPECIAL_NO_SPECIAL;
+        MAPGEN::Get_A_Planet_Or_Star_Special(0, &wormhole, &special, 1, 0);
+        DOCTEST_CHECK(wormhole == 1);
+        DOCTEST_CHECK(MAPGEN::n_wormholes == cap);
+
+        TEST_MAPGEN::Set_Weighted_Choices_(choices, 2);
+        wormhole = 0;
+        MAPGEN::Get_A_Planet_Or_Star_Special(0, &wormhole, &special, 1, 0);
+        DOCTEST_CHECK(wormhole == 0);
+        DOCTEST_CHECK(MAPGEN::n_wormholes == cap);
+        DOCTEST_CHECK(special == SYSTEM_SPECIAL_SPACE_DEBRIS);
+    }
+}
+
 DOCTEST_TEST_CASE("planet trimming preserves generated Orion and compacted references") {
     TEST_MAPGEN::Reset_();
     MOX::NUM_STARS = 4;
@@ -301,6 +368,7 @@ DOCTEST_TEST_CASE("Marooned Hero eligibility follows galaxy size instead of loca
         {GALAXY_SIZE_HUGE, 5},
         {GALAXY_SIZE_MAXIMUM, 5},
         {GALAXY_SIZE_CLUSTER, 5},
+        {GALAXY_SIZE_MASSIVE, 5},
     };
 
     for (const s_case& test_case : cases) {

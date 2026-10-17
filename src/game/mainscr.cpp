@@ -74,7 +74,8 @@ namespace MAINSCR {
         bool Use_Main_Map_Overview_Markers() {
             return MAP_SCALE::Use_Main_Map_Overview_Markers_(
                 main_map_overview_markers,
-                MOX::settings.galaxy_size == GALAXY_SIZE_MAXIMUM,
+                MOX::settings.galaxy_size == GALAXY_SIZE_MAXIMUM ||
+                    MOX::settings.galaxy_size == GALAXY_SIZE_MASSIVE,
                 MOX::NUM_STARS,
                 ORIGINAL_MAX_STARS,
                 MOX::cur_map_scale,
@@ -666,7 +667,8 @@ namespace MAINSCR {
     }
 
     void __cdecl Print_Star_Names() {
-        if (Is_Extended_Max_Map_View()) {
+        // Massive retains known-system labels even in the full-galaxy view.
+        if (Is_Extended_Max_Map_View() && MOX::settings.galaxy_size != GALAXY_SIZE_MASSIVE) {
             return;
         }
 

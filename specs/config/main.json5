@@ -168,12 +168,12 @@
     galaxy_size: {
       title: "Galaxy size",
       description: "Map-size selection used by new-game setup.",
-      remarks: "Player-selectable sizes use values 0 through 4. Native value 5 is retained only for legacy data and saved games.",
+      remarks: "Player-selectable sizes use values 0 through 4 and 6 (Massive, 120 stars). Native value 5 is retained only for legacy data and saved games.",
       kind: "enum",
       base_type: "uint8",
       allow_numeric: true,
       reject_unknown_numeric: true,
-      values: { small: 0, medium: 1, large: 2, huge: 3, maximum: 4 },
+      values: { small: 0, medium: 1, large: 2, huge: 3, maximum: 4, massive: 6 },
     },
     maximum_galaxy_zoom_mode: {
       title: "Maximum galaxy zoom mode",
@@ -5852,7 +5852,7 @@
       examples: ["map star_count maximum = 99;"],
       group: "gameplay", namespace: "map",
       bind_root: { header: "game/mapgen.h", symbol: "MAPGEN::star_count_by_galaxy_size" },
-      type: { kind: "array", count: 6, index_base: 0, index_type: "galaxy_size", element: { type: "int16", constraints: { min: 3, max: 1023 } } },
+      type: { kind: "array", count: 7, index_base: 0, index_type: "galaxy_size", element: { type: "int16", constraints: { min: 3, max: 1023 } } },
       default_source: "native",
     },
     layout: {
@@ -5863,7 +5863,7 @@
       group: "gameplay", namespace: "map",
       bind_root: { header: "game/mapgen.h", symbol: "MAPGEN::layout" },
       type: {
-        kind: "array", count: 6, index_base: 0, index_type: "galaxy_size",
+        kind: "array", count: 7, index_base: 0, index_type: "galaxy_size",
         element: { type: "map_layout" },
       },
       default_source: "native",
@@ -5918,7 +5918,7 @@
       description: "Sets the inclusive generated nebula-count range for each galaxy size.",
       group: "gameplay", namespace: "map", default_source: "native",
       bind_root: { header: "game/mapgen.h", symbol: "MAPGEN::nebula_count" },
-      type: { kind: "array", count: 6, index_base: 0, index_type: "galaxy_size", element: { type: "nebula_count_range" } },
+      type: { kind: "array", count: 7, index_base: 0, index_type: "galaxy_size", element: { type: "nebula_count_range" } },
     },
     star_class_weight: {
       title: "Star-class generation weights", description: "Sets spectral-class weights by galaxy age.",

@@ -35,6 +35,7 @@ A starting value is calculated from galaxy size and number of players:
 | Large | 140 |
 | Huge | 160 |
 | Maximum | 180 |
+| Massive | 180 |
 
 One point is subtracted from the starting time value each turn. Time score can go negative if the number of played turns exceeds the starting value. An eliminated empire with no remaining population receives no time score.
 
@@ -60,6 +61,7 @@ The game keeps a cumulative count of captured colonists. Their score varies by g
 | Large | 2/3, total rounded down |
 | Huge | 1/2, total rounded down |
 | Maximum | 2/5, total rounded down |
+| Massive | 2/5, total rounded down |
 
 
 ### Technology

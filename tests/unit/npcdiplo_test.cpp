@@ -7,6 +7,7 @@ namespace TEST_NPCDIPLO {
     void Reset_();
     void Set_Player_May_Get_Tech_(bool may_get);
     void Set_Tech_Value_(int32_t value);
+    int Relations_Calls_();
 }
 
 namespace {
@@ -72,6 +73,21 @@ DOCTEST_TEST_CASE("human technology trade preserves nonzero valuation") {
 
     DOCTEST_REQUIRE(tech_count == 1);
     DOCTEST_CHECK(tech_values[0] == 137);
+}
+
+DOCTEST_TEST_CASE("Massive expansion penalties become eligible only above eighteen colonies") {
+    for (int16_t colonies : {17, 18, 19}) {
+        TEST_NPCDIPLO::Reset_();
+        MOX::settings.galaxy_size = GALAXY_SIZE_MASSIVE;
+        MOX::settings.game_difficulty = GAME_DIFFICULTY_AVERAGE;
+        MOX::stardate = 35000;
+        MOX::player[0].objectives = PLAYER_OBJECTIVE_DIPLOMATIC;
+        MOX::player[1].objectives = PLAYER_OBJECTIVE_DIPLOMATIC;
+        MOX::player[0].total_colonies = colonies;
+        MOX::player[1].total_colonies = 1;
+        npcdiplo::NPC_Diplomacy_Buildup_Penalties();
+        DOCTEST_CHECK(TEST_NPCDIPLO::Relations_Calls_() == (colonies > 18 ? 1 : 0));
+    }
 }
 
 DOCTEST_TEST_CASE("AI surrender delay gates surrender evaluation") {

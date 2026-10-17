@@ -71,7 +71,7 @@ namespace npcdiplo {
 
                 int32_t galaxy_size = Galaxy_Size_For_Classic_Rules_(
                     MOX::settings.galaxy_size);
-                int32_t threshold = galaxy_size * 3 + 3;
+                int32_t threshold = Galaxy_Expansion_Colony_Threshold_(MOX::settings.galaxy_size);
                 if (threshold >= MOX::player[i].total_colonies) {
                     continue;
                 }
